@@ -150,7 +150,7 @@ const lines = [
   "Hi! I'm Mirelys Mendez Pons ♥",
   "I'm a Design student at Stanford, from Puerto Rico, studying human behavior and education.",
   "I design accessible tools and research how people learn.",
-  "Scroll down to explore my projects, research, and achievements!"
+  "Scroll down to explore my research, publications, and achievements!"
 ];
 const textEl = document.getElementById('dialogue-text');
 const box = document.getElementById('dialogue');

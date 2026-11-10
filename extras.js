@@ -3,17 +3,24 @@ const startScreen = document.getElementById('start');
 let closing = false;
 document.body.classList.add('locked');
 
+// little 3-note "game start" jingle
+function playStart() {
+  beep(500, 600, 0.1);
+  setTimeout(() => beep(650, 800, 0.1), 110);
+  setTimeout(() => beep(800, 1200, 0.2), 220);
+}
+
 function closeStart() {
   if (closing) return;
   closing = true;
-  window.scrollTo(0, 0);   // <-- add this line
+  playStart();
+  window.scrollTo(0, 0);
   startScreen.classList.add('hide');
   document.body.classList.remove('locked');
   document.removeEventListener('keydown', startKey, true);
   setTimeout(() => startScreen.remove(), 700);
   typeLine();
 }
-
 
 function startKey(e) {
   e.stopImmediatePropagation(); // keeps the panda game from starting behind the screen
@@ -26,36 +33,6 @@ function startKey(e) {
 document.addEventListener('keydown', startKey, true);
 startScreen.addEventListener('click', closeStart);
 
-// ---------- badges pop in ----------
-const badges = document.querySelectorAll('.badge');
-badges.forEach(b => b.classList.add('pre'));
-const badgeBox = document.querySelector('.badges');
-const io = new IntersectionObserver(entries => {
-  if (entries[0].isIntersecting) {
-    badges.forEach((b, i) => setTimeout(() => b.classList.remove('pre'), i * 120));
-    io.disconnect();
-  }
-}, { threshold: 0.3 });
-io.observe(badgeBox);
-
-// little 3-note "game start" jingle
-function playStart() {
-  beep(500, 600, 0.1);
-  setTimeout(() => beep(650, 800, 0.1), 110);
-  setTimeout(() => beep(800, 1200, 0.2), 220);
-}
-
-function closeStart() {
-  if (closing) return;
-  closing = true;
-  playStart();             // <-- add this line
-  window.scrollTo(0, 0);
-  startScreen.classList.add('hide');
-  document.body.classList.remove('locked');
-  document.removeEventListener('keydown', startKey, true);
-  setTimeout(() => startScreen.remove(), 700);
-  typeLine();
-}
 
 // ---------- sparkle trail ----------
 const sparkles = ['✿', '♥', '★'];
@@ -76,3 +53,44 @@ document.addEventListener('mousemove', e => {
   document.body.appendChild(s);
   setTimeout(() => s.remove(), 700);
 });
+
+// ---------- photo carousel (3 at a time) ----------
+(() => {
+  const track = document.getElementById('car-track');
+  if (!track) return;
+  const snaps = track.querySelectorAll('.snap');
+  const count = document.getElementById('car-count');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  const gap  = () => parseFloat(getComputedStyle(track).columnGap) || 22;
+  const per  = () => parseInt(getComputedStyle(track).getPropertyValue('--per')) || 3;
+  const step = () => snaps[0].offsetWidth + gap();
+  const first = () => Math.round(track.scrollLeft / step());
+  const atEnd = () => track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+  const behavior = () => (reduce ? 'auto' : 'smooth');
+
+  function next() {
+    if (atEnd()) track.scrollTo({ left: 0, behavior: behavior() });
+    else track.scrollTo({ left: (first() + 1) * step(), behavior: behavior() });
+  }
+  function prev() {
+    if (track.scrollLeft <= 4) track.scrollTo({ left: track.scrollWidth, behavior: behavior() });
+    else track.scrollTo({ left: (first() - 1) * step(), behavior: behavior() });
+  }
+
+  function updateCount() {
+    const a = first() + 1;
+    const b = Math.min(first() + per(), snaps.length);
+    count.textContent = a + '–' + b + ' / ' + snaps.length;
+  }
+
+  document.getElementById('car-prev').addEventListener('click', prev);
+  document.getElementById('car-next').addEventListener('click', next);
+  track.addEventListener('scroll', updateCount);
+  window.addEventListener('resize', updateCount);
+  track.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); prev(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); next(); }
+  });
+  updateCount();
+})();

@@ -546,3 +546,263 @@ body.locked { overflow: hidden; }
   border-radius: 4px;
   margin-bottom: 10px;
 }
+
+/* wider layout for big screens */
+body { max-width: 1100px; }
+.dialogue { max-width: 900px; }
+
+
+
+/* links inside cards (publications, research) */
+.card a { color: var(--ink); font-weight: bold; text-decoration: underline; }
+.card a:hover { background: var(--pink); }
+
+/* keyboard focus */
+a:focus-visible, .start:focus-visible, .dialogue:focus-visible {
+  outline: 3px solid var(--k);
+  outline-offset: 3px;
+}
+
+/* case-study text */
+.card p b { color: var(--k); }
+
+/* respect reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .blink, .arrow, .spark, #sprite, .panda, .panda::after { animation: none !important; }
+  .badge, .cart, .card, nav a { transition: none !important; }
+}
+
+.carousel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+.car-track {
+  --per: 3;      /* photos visible at once */
+  --gap: 22px;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  gap: var(--gap);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 14px 8px 18px;
+  scroll-padding: 0 8px;
+}
+.car-track::-webkit-scrollbar { display: none; }
+.car-track:focus-visible { outline: 3px solid var(--k); outline-offset: 3px; }
+
+.snap {
+  flex: 0 0 calc((100% - (var(--per) - 1) * var(--gap)) / var(--per));
+  scroll-snap-align: start;
+  box-sizing: border-box;
+  margin: 0;
+  background: var(--cream);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 4px 4px 0 var(--ink);
+  padding: 10px 10px 6px;
+  transition: transform 0.15s;
+}
+.snap:nth-child(odd)  { transform: rotate(-1deg); }
+.snap:nth-child(even) { transform: rotate(1deg); }
+.snap:hover { transform: translateY(-6px) rotate(0); }
+.snap img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+}
+.snap figcaption {
+  font-size: 8px;
+  line-height: 1.7;
+  margin-top: 8px;
+  text-align: center;
+}
+
+.car-btn {
+  flex: none;
+  background: var(--cream);
+  color: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 var(--ink);
+  padding: 10px 12px;
+  font-family: inherit;
+  font-size: 10px;
+  cursor: pointer;
+}
+.car-btn:hover { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.car-btn:focus-visible { outline: 3px solid var(--k); outline-offset: 3px; }
+
+.car-count { text-align: center; font-size: 9px; margin: 8px 0 0; }
+
+@media (max-width: 800px) { .car-track { --per: 2; } }
+@media (max-width: 520px) {
+  .car-track { --per: 1; }
+  .car-btn { padding: 8px; }
+}
+
+.badges {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+}
+.badge { width: auto; }
+
+@media (max-width: 600px) {
+  .badges { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- page layout: two columns ---------- */
+main.grid {
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+.features { display: grid; grid-template-columns: 1fr; }
+
+.badge span, .badge small { overflow-wrap: anywhere; }
+
+@media (max-width: 900px) {
+  .cols { grid-template-columns: 1fr; }
+}
+
+/* achievements now sit in a full-width row: keep the 3 + 3 grid compact and centered */
+#achievements .badges {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- readability: arcade font for labels, Nunito for reading ---------- */
+:root {
+  --arcade: 'Press Start 2P', monospace;
+  --body-font: 'Nunito', 'Trebuchet MS', sans-serif;
+}
+
+body {
+  font-family: var(--body-font);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* retro font stays on headings, nav, and buttons */
+h1, h2, .info h3, nav a, .nametag, .hud, .msg, .car-btn,
+.stat span, .badge span, .email, .start, .blink {
+  font-family: var(--arcade);
+}
+
+/* slightly bigger retro text so it's easier to read */
+h2 { font-size: 15px; line-height: 1.6; }
+nav a { font-size: 10px; }
+.badge span { font-size: 10px; }
+.stat span { font-size: 10px; }
+
+/* readable text */
+.card h3 { font-family: var(--body-font); font-size: 18px; font-weight: 700; line-height: 1.35; }
+.card p, .label p { font-size: 16px; line-height: 1.65; }
+.bio, .info p { font-size: 16px; line-height: 1.65; }
+.sub { font-size: 15px; }
+.dialogue p { font-size: 18px; line-height: 1.6; }
+.badge small { font-size: 13px; line-height: 1.4; }
+.snap figcaption, .car-count { font-size: 14px; }
+.tiny { font-family: var(--body-font); font-size: 14px; }
+
+/* ---------- panda walking loop ---------- */
+.panda-walk {
+  position: relative;
+  height: 80px;
+  overflow: hidden;
+}
+
+/* ground line */
+.panda-walk::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 6px;
+  height: 0;
+  border-top: 3px dashed var(--ink);
+  opacity: 0.5;
+}
+
+.walk-loop {
+  animation: walkAcross 12s linear infinite;
+}
+
+@keyframes walkAcross {
+  from { left: -70px; }
+  to   { left: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .walk-loop { animation: none; left: 40%; }
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  padding: 0;
+}
+.icon-link svg { display: block; }
+.icon-link:hover { background: var(--pink); }
+.icon-link:focus-visible { outline: 3px solid var(--k); outline-offset: 3px; }
+
+.bottom-row {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+  align-items: stretch;
+}
+.bottom-row .fun-box { margin-bottom: 0; }
+
+@media (max-width: 900px) {
+  .bottom-row { grid-template-columns: 1fr; }
+}
+
+#contact {
+  display: flex;
+  flex-direction: column;
+}
+#contact .links {
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 0;
+}
+
+.icon-link { width: 68px; height: 68px; }
+.icon-link svg { width: 34px; height: 34px; }
